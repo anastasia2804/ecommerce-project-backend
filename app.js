@@ -3,6 +3,7 @@ require('dotenv/config')
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require ('cors');
 const morgan = require('morgan');
 
 const { isAuthenticated } = require('./middleware/jwt.middleware');
@@ -15,6 +16,10 @@ mongoose.connect('mongodb://localhost/project3ECommerce')
 
 const app = express();
 
+app.use(cors({
+    origin: ['http://localhost:3000']
+}))
+
 const authRoutes = require('./routes/auth.routes')
 
 app.use(morgan('dev'));
@@ -22,6 +27,6 @@ app.use(bodyParser.json())
 app.use('/', authRoutes);
 
 
-app.listen('3000', ()=> {
-    console.log('app is listening on port 3000')
+app.listen('3001', ()=> {
+    console.log('app is listening on port 3001')
 });
