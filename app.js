@@ -21,10 +21,12 @@ app.use(cors({
 }))
 
 const authRoutes = require('./routes/auth.routes')
+const productsRoutes = require('./routes/products.routes')
 
 app.use(morgan('dev'));
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.use('/', authRoutes);
+app.use('/', productsRoutes);
 
 
 app.listen('3001', ()=> {

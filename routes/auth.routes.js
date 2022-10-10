@@ -8,23 +8,23 @@ const { isAuthenticated } = require('./../middleware/jwt.middleware.js');
 
 router.post('/signup', (req, res, next)=> {
     
-    const { username, password } = req.body
+    const { email, password } = req.body
 
-    if(!username || !password) {
-        res.json({ error: 'username and password required' });
+    if(!email || !password) {
+        res.json({ error: 'email and password are required' });
         return;
     }
 
-    User.findOne({ username })
+    User.findOne({ email })
     .then(foundUser => {
 
         if(foundUser) {
-        res.json({ error: 'username already exists' });
+        res.json({ error: 'user already exists' });
         return;
         }
 
     return User.create({
-        username,
+        email,
         password: bcryptjs.hashSync(password)
         })
         
@@ -41,30 +41,30 @@ router.post('/signup', (req, res, next)=> {
 
 router.post('/login', (req, res, next) => {
     
-    const { username, password } = req.body
+    const { email, password } = req.body
 
-    if(!username || !password) {
-        res.json({ error: 'username and password required' })
+    if(!email || !password) {
+        res.json({ error: 'email and password required' })
         return;
     }
 
-    User.findOne({username: username})
+    User.findOne({email: email})
         .then(foundUser => {
 
             if(!foundUser) {
-                res.json({ error: 'invalid username or password' })
+                res.json({ error: 'invalid email or password' })
                 return; 
             }
            
             const isValidPassword = bcryptjs.compareSync(password, foundUser.password);
 
             if(!isValidPassword) {
-                res.json({ error: 'invalid username or password' })
+                res.json({ error: 'invalid email or password' })
                 return;
             }
 
             const payload = {
-                username: foundUser.username,
+                email: foundUser.email,
                 _id: foundUser._id
             }
 
