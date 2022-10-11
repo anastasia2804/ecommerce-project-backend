@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product.model')
-const fileUploader = require('../config/cloudinary.config')
-
 
 router.get('/products', (req, res, next) => {
-    
+
     Product.find()
     .then(productsArray => {
         console.log(productsArray)
@@ -14,5 +12,16 @@ router.get('/products', (req, res, next) => {
     .catch(err => console.log(err))
 })
 
+
+router.get('/products/:productId', (req, res, next) => {
+
+    const { productId } = req.params;
+
+    Product.findById(productId)
+    .then(foundProduct => res.json({ product: foundProduct }))
+    .catch(err => res.json(err))
+
+
+})
 
 module.exports = router;
