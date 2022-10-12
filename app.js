@@ -22,12 +22,13 @@ app.use(cors({
 
 const authRoutes = require('./routes/auth.routes')
 const productsRoutes = require('./routes/products.routes')
+const ordersRoutes = require('./routes/orders.routes')
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use('/', authRoutes);
-app.use('/', productsRoutes);
-
+app.use('/', isAuthenticated, productsRoutes);
+app.use('/', isAuthenticated, ordersRoutes);
 
 app.listen('3001', ()=> {
     console.log('app is listening on port 3001')

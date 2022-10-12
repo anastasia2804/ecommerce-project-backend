@@ -87,5 +87,12 @@ router.get('/verify', isAuthenticated, (req, res, next) => {
     res.json(req.payload);
   });
 
+router.delete('/delete-user', isAuthenticated, (req, res, next) => {
+
+    User.findByIdAndDelete(req.payload._id)
+    .then(deletedUser=>res.json({deletedUser: deletedUser}))
+    .catch(err=>console.log(err))
+})
+
 
 module.exports = router;
