@@ -8,7 +8,7 @@ const morgan = require('morgan');
 
 const { isAuthenticated } = require('./middleware/jwt.middleware');
 
-mongoose.connect('mongodb://localhost/project3ECommerce')
+mongoose.connect(process.env.MONGODB_URI)
 .then(connectObject => {
     console.log(`connected to ${connectObject.connections[0].name}`)
 })
@@ -17,7 +17,7 @@ mongoose.connect('mongodb://localhost/project3ECommerce')
 const app = express();
 
 app.use(cors({
-    origin: ['http://localhost:3000']
+    origin: [process.env.FRONTEND_URL]
 }))
 
 const authRoutes = require('./routes/auth.routes')
@@ -30,6 +30,6 @@ app.use('/', authRoutes);
 app.use('/', isAuthenticated, productsRoutes);
 app.use('/', isAuthenticated, ordersRoutes);
 
-app.listen('3001', ()=> {
-    console.log('app is listening on port 3001')
+app.listen(process.env.PORT, ()=> {
+    console.log('app is listening')
 });
