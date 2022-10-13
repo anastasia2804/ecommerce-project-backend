@@ -16,16 +16,17 @@ mongoose.connect(process.env.MONGODB_URI)
 
 const app = express();
 
+app.use(morgan('dev'));
 app.use(cors({
     origin: [process.env.FRONTEND_URL]
 }))
+app.use(bodyParser.json());
 
 const authRoutes = require('./routes/auth.routes')
 const productsRoutes = require('./routes/products.routes')
 const ordersRoutes = require('./routes/orders.routes')
 
-app.use(morgan('dev'));
-app.use(bodyParser.json());
+
 app.use('/', authRoutes);
 app.use('/', isAuthenticated, productsRoutes);
 app.use('/', isAuthenticated, ordersRoutes);
