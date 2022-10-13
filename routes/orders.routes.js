@@ -34,6 +34,12 @@ router.post('/new-order', isAuthenticated, (req, res, next) => {
 router.get('/past-orders', isAuthenticated, (req, res, next)=> {
 
     Order.find({ userId: req.payload._id })
+    .populate({
+        path: 'products',
+        populate: {
+            path: 'productId'
+        }
+    })
     .then(foundOrders => {
         console.log(foundOrders)
         res.json({orders: foundOrders})
