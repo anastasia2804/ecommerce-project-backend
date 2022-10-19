@@ -15,9 +15,20 @@ router.post('/signup', (req, res, next)=> {
         return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+        if (!emailRegex.test(email)) {
+            res.json({ error: 'Provide a valid email address.' });
+            return;
+        }
+
+    const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+         if (!passwordRegex.test(password)) {
+            res.json({ error: 'Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.' });
+            return;
+        }
+
     User.findOne({ email })
     .then(foundUser => {
-        console.log(foundUser)
         if(foundUser) {
         res.json({ error: 'user already exists' });
         return;
@@ -30,8 +41,9 @@ router.post('/signup', (req, res, next)=> {
         
     })
     .then(createdUser => {
-        console.log(createdUser);
-        res.json({ user: createdUser});
+        const { email, _id } = createdUser;
+        const user = { email, _id };
+        res.json({ user: user});
     })
     .catch(err=> {
         console.log(err);
