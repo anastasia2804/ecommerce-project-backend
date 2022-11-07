@@ -17,9 +17,7 @@ mongoose.connect(process.env.MONGODB_URI)
 const app = express();
 
 app.use(morgan('dev'));
-app.use(cors({
-    origin: [process.env.FRONTEND_URL]
-}))
+app.use(cors())
 app.use(bodyParser.json());
 
 const authRoutes = require('./routes/auth.routes')
@@ -34,3 +32,4 @@ app.use('/', isAuthenticated, ordersRoutes);
 app.listen(process.env.PORT, ()=> {
     console.log('app is listening')
 });
+
