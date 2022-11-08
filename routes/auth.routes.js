@@ -7,24 +7,19 @@ const User = require("../models/User.model");
 const { isAuthenticated } = require("./../middleware/jwt.middleware.js");
 
 router.post("/signup", (req, res, next) => {
+
   const { email, password } = req.body;
-
-  if (!email || !password) {
-    res.json({ error: "email and password are required" });
-    return;
-  }
-
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  if (!emailRegex.test(email)) {
-    res.json({ error: "Provide a valid email address." });
-    return;
-  }
-
   const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
-  if (!passwordRegex.test(password)) {
-    res.json({
-      error:
-        "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
+  
+  if (!email || !password) {
+    res.status(401).json({ message: "Email and Password are Required" });
+    return;
+  } else if (!emailRegex.test(email)) {
+    res.status(401).json({ message: "Provide a valid Email address." });
+    return;
+  } else if (!passwordRegex.test(password)) {
+    res.status(401).json({message:"Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
     });
     return;
   }
@@ -32,7 +27,7 @@ router.post("/signup", (req, res, next) => {
   User.findOne({ email })
     .then((foundUser) => {
       if (foundUser) {
-        return res.json({ error: "user already exists" });
+        return res.status(401).json({ message: "User already exists" });
       }
 
       return User.create({
@@ -43,11 +38,12 @@ router.post("/signup", (req, res, next) => {
     .then((createdUser) => {
       const { email, _id } = createdUser;
       const user = { email, _id };
-      res.json({ user: user });
+      return res.status(200).json({ user: user });
+      
     })
     .catch((err) => {
       console.log(err);
-      res.json({ error: err });
+      res.status(500).json({ message: err }); 
     });
 });
 
@@ -55,14 +51,14 @@ router.post("/login", (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    res.json({ error: "email and password required" });
+    res.status(401).json({ message: "Email and Password required" });
     return;
   }
 
   User.findOne({ email: email })
     .then((foundUser) => {
       if (!foundUser) {
-        res.json({ error: "invalid email or password" });
+        res.status(401).json({ message: "Invalid Email or Password" });
         return;
       }
 
@@ -72,7 +68,7 @@ router.post("/login", (req, res, next) => {
       );
 
       if (!isValidPassword) {
-        res.json({ error: "invalid email or password" });
+        res.json({ error: "Invalid Email or Password" });
         return;
       }
 
