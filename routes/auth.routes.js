@@ -26,19 +26,23 @@ router.post("/signup", (req, res, next) => {
 
   User.findOne({ email })
     .then((foundUser) => {
+      console.log(foundUser)
       if (foundUser) {
-        return res.status(401).json({ message: "User already exists" });
+        res.status(401).json({ message: "User already exists" });
       }
-
-      return User.create({
+      else {
+        return User.create({
         email,
         password: bcryptjs.hashSync(password),
-      });
+      })}
     })
     .then((createdUser) => {
-      const { email, _id } = createdUser;
-      const user = { email, _id };
-      return res.status(200).json({ user: user });
+      if(createdUser) {
+        const { email, _id } = createdUser;
+        const user = { email, _id };
+        return res.status(200).json({ user: user });
+      }
+      
       
     })
     .catch((err) => {
@@ -68,7 +72,7 @@ router.post("/login", (req, res, next) => {
       );
 
       if (!isValidPassword) {
-        res.json({ error: "Invalid Email or Password" });
+        res.status(401).json({ message: "Invalid Email or Password" });
         return;
       }
 
