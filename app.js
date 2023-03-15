@@ -26,7 +26,9 @@ const ordersRoutes = require('./routes/orders.routes')
 
 
 app.use('/', authRoutes);
-app.use('/', isAuthenticated, productsRoutes);
+app.use('/', 
+// isAuthenticated, 
+productsRoutes);
 app.use('/', isAuthenticated, ordersRoutes);
 
 app.listen(process.env.PORT, ()=> {
