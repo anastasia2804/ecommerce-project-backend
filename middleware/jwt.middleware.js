@@ -6,6 +6,8 @@ const isAuthenticated = jwt({
   algorithms: ["HS256"],
   requestProperty: 'payload', 
   getToken: getTokenFromHeaders
+}).unless({
+  path: ["/", "/signup", "/login"]
 });
  
  
