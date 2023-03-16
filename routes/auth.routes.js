@@ -6,6 +6,10 @@ const User = require("../models/User.model");
 
 const { isAuthenticated } = require("./../middleware/jwt.middleware.js");
 
+router.get("/", (req, res) => {
+  res.status(200).send("Welcome to the Pura Vida API!");
+});
+
 router.post("/signup", (req, res, next) => {
 
   const { email, password } = req.body;
